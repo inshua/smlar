@@ -9,25 +9,25 @@
 typedef	struct ProcTypeInfoData	*ProcTypeInfo;
 
 typedef struct ProcTypeInfoData {
-	Oid				typid;
-	Oid				hashFuncOid;
-	Oid				cmpFuncOid;
-	int16			typlen;
-	bool			typbyval;
-	char			typalign;
+  Oid			typid;
+  Oid			hashFuncOid;
+  Oid			cmpFuncOid;
+  int16			typlen;
+  bool			typbyval;
+  char			typalign;
 
-	/* support of composite type */
-	char			typtype;
-	TupleDesc		tupDesc;
+  /* support of composite type */
+  char			typtype;
+  TupleDesc		tupDesc;
 
-	/*
-	 * Following member can become invalid,
-	 * so fill it just before using
-	 */
-	bool			hashFuncInited;
-	FmgrInfo		hashFunc;
-	bool			cmpFuncInited;
-	FmgrInfo		cmpFunc;
+  /*
+   * Following member can become invalid,
+   * so fill it just before using
+   */
+  bool			hashFuncInited;
+  FmgrInfo		hashFunc;
+  bool			cmpFuncInited;
+  FmgrInfo		cmpFunc;
 } ProcTypeInfoData;
 
 ProcTypeInfo findProcs(Oid typid);
@@ -36,19 +36,19 @@ void getFmgrInfoCmp(ProcTypeInfo info);
 
 #define NDIM 1
 /* reject arrays we can't handle; but allow a NULL or empty array */
-#define CHECKARRVALID(x) \
-	do { \
-		if (x) { \
-			if (ARR_NDIM(x) != NDIM && ARR_NDIM(x) != 0) \
-				ereport(ERROR, \
-						(errcode(ERRCODE_ARRAY_SUBSCRIPT_ERROR), \
-						 errmsg("array must be one-dimensional"))); \
-			if (ARR_HASNULL(x)) \
-				ereport(ERROR, \
-						(errcode(ERRCODE_NULL_VALUE_NOT_ALLOWED), \
-						 errmsg("array must not contain nulls"))); \
-		} \
-	} while(0)
+#define CHECKARRVALID(x)                                             \
+  do {                                                               \
+    if (x) {                                                         \
+      if (ARR_NDIM(x) != NDIM && ARR_NDIM(x) != 0)                   \
+        ereport(ERROR,                                                  \
+                (errcode(ERRCODE_ARRAY_SUBSCRIPT_ERROR),                \
+                 errmsg("array must be one-dimensional")));             \
+      if (ARR_HASNULL(x))                                               \
+        ereport(ERROR,                                                  \
+                (errcode(ERRCODE_NULL_VALUE_NOT_ALLOWED),               \
+                 errmsg("array must not contain nulls")));              \
+    }                                                                   \
+  } while(0)
 
 #define ARRISVOID(x)  ((x) == NULL || ARRNELEMS(x) == 0)
 #define ARRNELEMS(x)  ArrayGetNItems(ARR_NDIM(x), ARR_DIMS(x))
@@ -58,7 +58,7 @@ typedef struct SimpleArray {
 	Datum		   *elems;
 	double		   *df;  /* frequency in current doc */
 	uint32		   *hash;
-	int				nelems;
+	int		 		nelems;
 	ProcTypeInfo	info;
 } SimpleArray;
 
@@ -75,24 +75,24 @@ const char* GetSmlarTable(void);
 bool GetSmlarUsePersistent(void);
 double getOneAdd(void);
 int getTFMethod(void);
-int getSmlType(void); 
+int getSmlType(void);
 /*
  * GiST
  */
 
-#define SmlarOverlapStrategy		1
-#define SmlarSimilarityStrategy		2
+#define SmlarOverlapStrategy        1
+#define SmlarSimilarityStrategy     2
 
 struct SmlSign;
 struct SmlSign* Array2HashedArray(ProcTypeInfo info, ArrayType *a);
 /*
  * Cache subsystem
  */
-void*	SearchArrayCache( void *cache, MemoryContext ctx, Datum a, ArrayType **da, SimpleArray **sa,  struct SmlSign  **ss );
+void* 	SearchArrayCache( void *cache, MemoryContext ctx, Datum a, ArrayType **da, SimpleArray **sa,  struct SmlSign  **ss );
 
 typedef struct StatElem {
-	Datum		datum;
-	double		idf; /*  log(d/df) */
+    Datum   	datum;
+	double     	idf; /*  log(d/df) */
 } StatElem;
 
 typedef struct HashedElem {
@@ -107,13 +107,13 @@ typedef struct SignedElem {
 } SignedElem;
 
 typedef struct StatCache {
-	StatElem		*elems;
-	int				nelems;
-	int64_t			ndoc;
+	StatElem        *elems;
+	int             nelems;
+	int64_t         ndoc;
 	HashedElem		*helems;
-	int				nhelems;
+	int             nhelems;
 	SignedElem		*selems;
-	ProcTypeInfo	info;
+	ProcTypeInfo    info;
 } StatCache;
 
 StatCache *initStatCache(MemoryContext ctx);
