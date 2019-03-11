@@ -93,7 +93,7 @@ getAMProc(Oid amoid, Oid typid)
 		 */
 		catlist = SearchSysCacheList(CASTSOURCETARGET, /* 1, */
 										ObjectIdGetDatum(typid),
-										0, 0, 0);
+										0, 0);
 
 		for (i = 0; i < catlist->n_members; i++)
 		{
