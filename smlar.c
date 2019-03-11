@@ -91,7 +91,7 @@ getAMProc(Oid amoid, Oid typid)
 		/*
 		 * Search binary-coercible type
 		 */
-		catlist = SearchSysCacheList(CASTSOURCETARGET, /* 1, */
+		catlist = SearchSysCacheList(CASTSOURCETARGET,  1, 
 										ObjectIdGetDatum(typid),
 										0, 0);
 
